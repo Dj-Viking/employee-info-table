@@ -1,0 +1,35 @@
+{
+  "name": "employee-info-table",
+  "version": "1.0.0",
+  "description": "CRUD console application of an employee info table",
+  "main": "server.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.1.0"
+  },
+  "devDependencies": {
+    "jest": "^26.4.0"
+  },
+  "scripts": {
+    "test": "jest --verbose",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dj-Viking/employee-info-table.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "sql",
+    "mysql",
+    "javascript"
+  ],
+  "author": "Anders Ackerman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dj-Viking/employee-info-table/issues"
+  },
+  "homepage": "https://github.com/Dj-Viking/employee-info-table#readme"
+}
