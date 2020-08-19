@@ -45,14 +45,22 @@ const promptBeginning = () => {
   .then(data => {
     console.log(data);
     if (data.queryChoice === 'View All Departments') {
-      getDept();
+      getDepts();
+    }
+    if (data.queryChoice === 'View All Roles') {
+      getRoles();
+    }
+    if (data.queryChoice === 'View All Employees') {
+      getEmps();
     }
   })
   .catch(err => err);
 }
 
-const getDept = () => {
-  const sql = `SELECT * FROM departments`;
+getDepts = () => {
+  const sql = `
+  SELECT * FROM departments
+  `;
   const params = [];
   console.log("\x1b[33m", "Querying departments...", "\x1b[00m");
   db.promise().query(sql, params, function(err, rows, fields) {
@@ -60,7 +68,43 @@ const getDept = () => {
       throw err;
     }
   })
-  .then(([rows, fields]) =>{
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
+
+getRoles = () => {
+  const sql = `
+  SELECT * FROM roles
+  `;
+  const params = [];
+  console.log("\x1b[33m", "Querying roles...", "\x1b[00m");
+  db.promise().query(sql, params, function(err, rows, fields) {
+    if (err) {
+      throw err;
+    }
+  })
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
+
+getEmps = () => {
+  const sql = `
+  SELECT * FROM employees
+  `;
+  const params = [];
+  console.log("\x1b[33m", "Querying roles...", "\x1b[00m");
+  db.promise().query(sql, params, function(err, rows, fields) {
+    if (err) {
+      throw err;
+    }
+  })
+  .then(([rows, fields]) => {
     console.table(rows);
   })
   .then(() => promptBeginning())
