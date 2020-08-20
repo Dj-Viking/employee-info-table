@@ -36,10 +36,14 @@ const promptAddDept = () => {
   return inquirer.prompt (
     {
       type: 'input',
-      name: '',
-      message: ''
+      name: 'deptName',
+      message: 'What is the name of the department you would like to add?'
     }
   )
+  .then(deptInfo => {
+    addDept(deptInfo);
+  })
+  .catch(err => err);
 }
 
 const promptBeginning = () => {
@@ -62,9 +66,9 @@ const promptBeginning = () => {
     if (data.queryChoice === 'View All Employees') {
       getEmps();
     }
-    // if (data.queryChoice === 'Add A Department') {
-    //   promptAddDept();
-    // }
+    if (data.queryChoice === 'Add A Department') {
+      promptAddDept();
+    }
   })
   .catch(err => err);
 }
@@ -159,12 +163,25 @@ getEmps = () => {
 
 
 //function for querying adding a department 
-// addDept = () => {
-//   const sql = `
-  
-//   `
-//   const params = [];
-// }
+addDept = deptInfo => {
+  const sql = `
+  INSERT INTO departments (name) VALUES (?)
+  `;
+  const params = [deptInfo.deptName];
+  console.log(`\x1b[33m`, `
+  Querying Add Department...
+  `, `\x1b[00m`);
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) {
+      throw err;
+    }
+  })
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 
 //function for querying adding a role
 
