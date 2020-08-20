@@ -1,29 +1,33 @@
+use employees_db;
+
 INSERT INTO departments (name)
-VALUES
-  ('Electrical'),
-  ('Software'),
-  ('Marketing'),
-  ('Music'),
-  ('Human Resources'),
-  ('Security'),
-  ('Coffee'),
-  ('Networking')
-;
+  VALUES
+    ('Marketing'),
+    ('Engineering'),
+    ('Magic'),
+    ('Coffee')
+  ;
 
 INSERT INTO roles (title, salary, department_id)
-VALUES 
-  ('Engineer', 60000, 1),
-  ('Specialist', 50000, 2),
-  ('Officer', 40000, 3),
-  ('Composer', 100000, 4),
-  ('Agent', 80000, 5)
-;
+  VALUES
+    ('Marketing Lead', 100000, 1),
+    ('Marketing Specialist', 80000, 1),
+    ('Lead Engineer', 150000, 2),
+    ('Software Engineer', 120000, 2),
+    ('Magicks Manager', 60000, 3),
+    ('Magician', 30000, 3),
+    ('Coffee Team Lead', 50000, 4),
+    ('Barista', 40000, 4)
+  ;
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES
-  ('Jon', 'Doe', 1, NULL),
-  ('Jan', 'Doe', 2, NULL),
-  ('Jane', 'Doe', 3, NULL),
-  ('Jim', 'Doe', 4, NULL),
-  ('Joe', 'Doe', 5, NULL)
-;
+  VALUES
+    ('Mike', 'Wazowski', 1, NULL),
+    ('Jackie', 'Chan', 2, 1),
+    ('Bruce', 'Lee', 3, NULL),
+    ('M.', 'Bison', 4, 3),
+    ('Super', 'Mario', 5, NULL),
+    ('Bowser', 'Koopa', 6, 5),
+    ('Sarah', 'Marshall', 7, NULL),
+    ('Tom', 'Hanks', 8, 7)
+  ;

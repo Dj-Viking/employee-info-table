@@ -1,9 +1,8 @@
 //const express = require('express');
-const mysqlPromise = require('mysql2/promise');
 const mysql = require('mysql2');
-const dbPromise = mysqlPromise;
 //const PORT = process.env.PORT || 3000;
 //const app = express();
+const cTable = require('console.table');
 const inquirer = require('inquirer');
 //create connection to mysql2 server
 const db = mysql.createConnection({
@@ -11,7 +10,7 @@ const db = mysql.createConnection({
   user: 'root',
   port: '3306',
   password: 'root123@',
-  database: 'employee_db'
+  database: 'employees_db'
 });
 
 db.connect((err) => {
@@ -59,7 +58,7 @@ const promptBeginning = () => {
 
 getDepts = () => {
   const sql = `
-  SELECT * FROM departments
+  SELECT id, name FROM departments
   `;
   const params = [];
   console.log("\x1b[33m", "Querying departments...", "\x1b[00m");
@@ -77,7 +76,9 @@ getDepts = () => {
 
 getRoles = () => {
   const sql = `
-  SELECT * FROM roles
+  SELECT roles.id, roles.title, roles.salary, departments.name AS department_name
+  FROM roles
+  LEFT JOIN departments ON roles.department_id = departments.id
   `;
   const params = [];
   console.log("\x1b[33m", "Querying roles...", "\x1b[00m");
@@ -98,7 +99,7 @@ getEmps = () => {
   SELECT * FROM employees
   `;
   const params = [];
-  console.log("\x1b[33m", "Querying roles...", "\x1b[00m");
+  console.log("\x1b[33m", "Querying employees...", "\x1b[00m");
   db.promise().query(sql, params, function(err, rows, fields) {
     if (err) {
       throw err;

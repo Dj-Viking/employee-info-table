@@ -1,19 +1,19 @@
 ## Acceptance Criteria
 
-* GIVEN a command-line application that accepts user input
-* WHEN I start the application
-* THEN I am presented with the following options: 
-  - view all departments, 
-  - view all roles, 
-  - view all employees, 
-  - add a department, 
-  - add a role, add an employee,
-  - update an employee role
-* WHEN I choose to view all departments
-* THEN I am presented with 
-  - a formatted table showing department names and department ids
-* WHEN I choose to view all roles
-* THEN I am presented with the 
+* DONE GIVEN a command-line application that accepts user input
+* DONE WHEN I start the application
+* DONE THEN I am presented with the following options: 
+  - DONE view all departments, 
+  - DONE view all roles, 
+  - DONE view all employees, 
+  - DONE add a department, 
+  - DONE add a role, add an employee,
+  - DONE update an employee role
+* DONE WHEN I choose to view all departments
+* DONE THEN I am presented with 
+  - DONE a formatted table showing department names and department ids
+* DONE WHEN I choose to view all roles
+* DONE THEN I am presented with the 
   - job title, 
   - role id, 
   - the department that role belongs to, and 
