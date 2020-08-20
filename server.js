@@ -76,7 +76,7 @@ getDepts = () => {
 
 getRoles = () => {
   const sql = `
-  SELECT roles.id, roles.title, roles.salary, departments.name AS department_name
+  SELECT roles.title, roles.id, departments.name AS department_name, roles.salary 
   FROM roles
   LEFT JOIN departments ON roles.department_id = departments.id
   `;
