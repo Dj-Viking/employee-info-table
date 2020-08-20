@@ -88,6 +88,7 @@ getRoles = () => {
     }
   })
   .then(([rows, fields]) => {
+    //console.log(fields);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -95,9 +96,24 @@ getRoles = () => {
 }
 
 getEmps = () => {
+  // const sql = `
+  // SELECT employees.id AS employee_id,
+  //        employees.first_name AS first_name, 
+  //        employees.last_name AS last_name,
+  //        employees.manager_id AS manager_name, 
+  //        roles.title
+  // FROM employees, manager_name
+  // WHERE employees.manager_id = employees.first_name
+  // LEFT JOIN employees manager_name ON employees.manager_id > employees.id
+  // LEFT JOIN roles ON employees.role_id = roles.id
+  // ORDER BY manager_name DESC
+  // `;
   const sql = `
-  SELECT * FROM employees
-  `;
+  SELECT employees.id AS emp_id, employees.first_name AS emp_name,
+         employees.manager_id AS manager_id, employees.first_name AS manager_name
+         FROM employees
+         WHERE employees.id > employees.first_name;
+  `
   const params = [];
   console.log("\x1b[33m", "Querying employees...", "\x1b[00m");
   db.promise().query(sql, params, function(err, rows, fields) {
