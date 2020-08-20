@@ -20,11 +20,11 @@
   - DONE the salary for that role
 * DONE WHEN I choose to view all employees
 * DONE THEN I am presented with a formatted table showing employee data, including 
-  - employee ids, 
-  - first names, last names, 
-  - job titles, departments, 
-  - salaries, and 
-  - managers that the employees report to
+  - DONE employee ids, 
+  - DONE first names, last names, 
+  - DONE job titles, departments, 
+  - DONE salaries, and 
+  - DONE managers that the employees report to
 * WHEN I choose to add a department
 * THEN I am prompted to enter 
   - the name of the department and that department is added to the database
