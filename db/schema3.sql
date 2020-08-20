@@ -3,6 +3,8 @@ CREATE DATABASE employees_db;
 
 USE employees_db;
 
+
+
 CREATE TABLE departments (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) UNIQUE NOT NULL
@@ -21,14 +23,14 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE managers (
-  id INT unsigned AUTO_INCREMEMT PRIMARY KEY,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
   role_id INT UNSIGNED NOT NULL,
-    INDEX role_ind (role_id),
-    CONSTRAINT fk_role 
-    FOREIGN KEY (role_id) 
-    REFERENCES roles(id) 
+  INDEX role_ind (role_id),
+    CONSTRAINT fk_role2
+    FOREIGN KEY (role_id)
+    REFERENCES roles(id)
     ON DELETE CASCADE
 );
 
@@ -41,11 +43,11 @@ CREATE TABLE employees (
     CONSTRAINT fk_role 
     FOREIGN KEY (role_id) 
     REFERENCES roles(id) 
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+  manager_id INT UNSIGNED,
   INDEX man_ind (manager_id),
     CONSTRAINT fk_manager 
     FOREIGN KEY (manager_id) 
     REFERENCES managers(id) 
     ON DELETE SET NULL
 );
-

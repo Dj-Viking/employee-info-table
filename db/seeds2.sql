@@ -20,7 +20,7 @@ INSERT INTO roles (title, salary, department_id)
     ('Barista', 40000, 4)
   ;
 
-INSERT INTO employees (first_name, last_name, role_id)
+  INSERT INTO managers (first_name, last_name, role_id)
   VALUES
     ('Mike', 'Wazowski', 1),
     ('Bruce', 'Lee', 3),
@@ -28,9 +28,15 @@ INSERT INTO employees (first_name, last_name, role_id)
     ('Sarah', 'Marshall', 7)
   ;
 
-INSERT INTO managers (first_name, last_name, role_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
   VALUES
-  ('Jackie', 'Chan', 2),
-  ('M.', 'Bison', 4),
-  ('Bowser', 'Koopa', 6),
-  ('Tom', 'Hanks', 8)
+
+    ('Jackie', 'Chan', 2, 1),
+
+    ('M.', 'Bison', 4, 3),
+
+    ('Bowser', 'Koopa', 6, 5),
+
+    ('Tom', 'Hanks', 8, 7)
+  ;
+
