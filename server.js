@@ -33,16 +33,46 @@ const choiceList = [
 ];
 
 const promptAddDept = () => {
-  return inquirer.prompt (
+  return inquirer.prompt ([
     {
       type: 'input',
       name: 'deptName',
       message: 'What is the name of the department you would like to add?'
+    },
+    {
+      type: 'input',
+      name: 'test',
+      message: 'this is a test'
     }
-  )
+  ])
   .then(deptInfo => {
     addDept(deptInfo);
   })
+  .catch(err => err);
+}
+
+const promptAddRole = () => {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'roleTitle',
+      message: 'What would you like this new role to be named?'
+    },
+    {
+      type: 'input',
+      name: 'roleSalary',
+      message: `What is this role's salary?`
+    },
+    {
+      type: 'input',
+      name: 'roleId',
+      message: `What is this role's id? \nPlease reference the departments table to match it to the department it goes with.`
+    }
+  ])
+  .then(roleInfo => {
+    addRole(roleInfo);
+  })
+  .then(() => promptBeginning())
   .catch(err => err);
 }
 
@@ -68,6 +98,9 @@ const promptBeginning = () => {
     }
     if (data.queryChoice === 'Add A Department') {
       promptAddDept();
+    }
+    if (data.queryChoice === 'Add A Role') {
+      promptAddRole();
     }
   })
   .catch(err => err);
@@ -135,15 +168,28 @@ getEmps = () => {
   //        FROM employees
   //        WHERE employees.id > employees.first_name;
   // `
+  // const sql = `
+  // SELECT
+  //   employees.id, roles.title AS job_title, departments.name AS dept_name,
+  //   CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name,
+  //   CONCAT(managers.first_name, ' ', managers.last_name) AS Reports_to
+  // FROM employees
+  // LEFT JOIN managers ON employees.manager_id = managers.role_id
+  // LEFT JOIN roles ON employees.role_id = roles.id
+  // LEFT JOIN departments ON roles.department_id = departments.id
+  // `
   const sql = `
-  SELECT
-    employees.id, roles.title AS job_title, departments.name AS dept_name,
-    CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name,
-    CONCAT(managers.first_name, ' ', managers.last_name) AS Reports_to
+  SELECT 
+    employees.id, 
+    CONCAT(employees.first_name, ' ', employees.last_name) AS name,
+    roles.title, 
+    roles.salary, 
+    departments.name AS department, 
+    CONCAT(managers.first_name, ' ', managers.last_name) AS manager
   FROM employees
-  LEFT JOIN managers ON employees.manager_id = managers.role_id
   LEFT JOIN roles ON employees.role_id = roles.id
   LEFT JOIN departments ON roles.department_id = departments.id
+  LEFT JOIN employees managers ON managers.id = employees.manager_id;
   `
   const params = [];
   console.log(`\x1b[33m`, `
@@ -184,7 +230,25 @@ addDept = deptInfo => {
 }
 
 //function for querying adding a role
-
+addRole = roleInfo => {
+  const sql = `
+  INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)
+  `;
+  const params = [roleInfo.roleTitle, roleInfo.roleSalary, roleInfo.deptId];
+  console.log(`\x1b[33m`, `
+  Querying Add A Role...
+  `, `\x1b[00m`);
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) {
+      throw err;
+    }
+  })
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 //function for querying adding an employee
 
 //function for querying updating an employee
