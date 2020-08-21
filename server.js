@@ -13,6 +13,7 @@ const db = mysql.createConnection({
 const deptList = [];
 const roleList = [];
 const empList = [];
+const manObjs = [];
 const manList = [];
 startGetDepts = () => {
   const sql = `select * from departments ORDER BY id ASC`;
@@ -72,12 +73,16 @@ startGetEmps = () => {
     }
     for (let i = 0; i < rows.length; i++) {
       if (rows[i].manager === null) {
-        manList.push(rows[i].name);
+        manObjs.push(rows[i]);
       }
     }
     console.table(rows);
     console.log(rows);
     console.log(empList);
+    console.log(manObjs);
+    for (let i = 0; i < manObjs.length; i++) {
+      manList.push(manObjs[i].name);
+    }
     console.log(manList);
   })
 }
@@ -176,31 +181,29 @@ const promptAddEmp = () => {
       choices: roleList
     },
     {
-      type: 'confirm',
-      name: 'hasManagerConfirm',
-      message: 'Does this employee have a manager?'
-    },
-    {
       type: 'list',
       name: 'managerName',
       message: `Who is this employee's manager?`,
-      choices: manList,
-      when: ({ hasManagerConfirm }) => hasManagerConfirm
+      choices: manList
     }
   ])
   .then(empInfo => {
-    if (!empInfo.managerName) {
-      empInfo.managerName = '';
-    } else {
       //convert managerName into a managerId
       let managerId;
       for (let i = 0; i < manList.length; i++) {
         if (empInfo.managerName === manList[i]) {
-          managerId = i + 1;
+          if (manList.indexOf(manList[i]) === 0) {
+            managerId = i + 1;
+          } else if (manList.indexOf(manList[i]) === 1) {
+            managerId = i + 2;
+          } else if (manList.indexOf(manList[i]) === 2) {
+            managerId = i + 3;
+          } else if (manList.indexOf(manList[i]) === 3) {
+            managerId = i + 4;
+          }
         }
       }
       empInfo.managerId = managerId;
-    }
     //convert roleTitle into a roleId
     let empRoleId;
     for (let i = 0; i < roleList.length; i++) {
@@ -329,7 +332,7 @@ getEmps = () => {
   SELECT 
     employees.id, 
     CONCAT(employees.first_name, ' ', employees.last_name) AS name,
-    roles.title, 
+    roles.title AS role, 
     roles.salary, 
     departments.name AS department, 
     CONCAT(managers.first_name, ' ', managers.last_name) AS manager
@@ -413,12 +416,8 @@ addEmp = empInfo => {
   //push onto manager array if employee is a manager
   console.log('\x1b[33m', 'empInfo Object', '\x1b[00m');
   console.log(empInfo);
-  if (empInfo.hasManagerConfirm === false) {
-    empInfo.managerId = null;
-  } else {
-    empInfo.managerId = parseInt(empInfo.managerId, 10);
-    console.log(empInfo.managerId);
-  }
+  empInfo.managerId = parseInt(empInfo.managerId, 10);
+  console.log(empInfo.managerId);
   const sql = `
   INSERT INTO employees 
     (first_name, last_name, role_id, manager_id) 

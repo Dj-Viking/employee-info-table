@@ -7,7 +7,8 @@
   - DONE view all roles, 
   - DONE view all employees, 
   - DONE add a department, 
-  - DONE add a role, add an employee,
+  - DONE add a role, 
+  - DONE add an employee,
   - DONE update an employee role
 * DONE WHEN I choose to view all departments
 * DONE THEN I am presented with 
