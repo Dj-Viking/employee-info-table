@@ -157,7 +157,6 @@ const promptAddRole = () => {
   .catch(err => err);
 }
 
-
 const promptAddEmp = () => {
   return inquirer.prompt ([
     {
@@ -217,6 +216,38 @@ const promptAddEmp = () => {
   .catch(err => err);
 }
 
+const promptUpdateRole = () => {
+  return inquirer.prompt ([
+    {
+      type: 'list',
+      name: 'updateEmpChoice',
+      message: 'Which employee do you want to update?',
+      choices: empList
+    },
+    {
+      type: 'list',
+      name: 'updateRoleChoice',
+      message: 'Which role should this employee be assigned?',
+      choices: roleList
+    },
+  ])
+  .then(empRoleUpdateInfo => {
+    let firstName;
+    let splitName = empRoleUpdateInfo.updateEmpChoice.split(' ');
+    firstName = splitName[0];
+    empRoleUpdateInfo.firstName = firstName;
+    //convert roleTitle into a roleId
+    let empRoleId;
+    for (let i = 0; i < roleList.length; i++) {
+      if (empRoleUpdateInfo.updateRoleChoice === roleList[i]) {
+        empRoleId = i + 1;
+      }
+    }
+    empRoleUpdateInfo.empRoleId = empRoleId;
+    updateEmpRole(empRoleUpdateInfo);
+  })
+}
+
 const promptBeginning = () => {
   return inquirer.prompt(
     {
@@ -245,6 +276,9 @@ const promptBeginning = () => {
     }
     if (data.queryChoice === 'Add An Employee') {
       promptAddEmp();
+    }
+    if (data.queryChoice === 'Update An Employee Role') {
+      promptUpdateRole();
     }
   })
   .catch(err => err);
@@ -444,7 +478,27 @@ addEmp = empInfo => {
   .catch(err => err);
 }
 //function for querying updating an employee
-
+updateEmpRole = empRoleUpdateInfo => {
+  const sql = `
+  UPDATE employees 
+    SET role_id = ? 
+    WHERE first_name = ?
+  `;
+  const params = [empRoleUpdateInfo.empRoleId, empRoleUpdateInfo.firstName]
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) {
+      throw err;
+    }
+  })
+  .then(([rows, fields]) => {
+    console.log(`
+    
+    `);
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 //function for querying updating employee managers
 
 //function for querying viewing employees by only manager

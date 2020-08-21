@@ -42,11 +42,11 @@
   - DONE role, and 
   - DONE manager and 
   - DONE that employee is added to the database
-* WHEN I choose to update an employee role
-* THEN I am prompted to select 
-  - an employee to update 
-  - and their new role and 
-  - this information is updated in the database 
+* DONE WHEN I choose to update an employee role
+* DONE THEN I am prompted to select 
+  - DONE an employee to update 
+  - DONE and their new role and 
+  - DONE this information is updated in the database 
 
 ## BONUS
 
