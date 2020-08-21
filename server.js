@@ -10,22 +10,23 @@ const db = mysql.createConnection({
   database: 'employees_db'
 });
 //inquirer lists getting populated by database
-let deptList = [];
-let roleList = [];
-let empList = [];
+const deptList = [];
+const roleList = [];
+const empList = [];
+const manList = [];
 startGetDepts = () => {
   const sql = `select * from departments ORDER BY id ASC`;
   const params = [];
   db.query(sql, params, function(err, rows, fields) {
     if (err) throw err;
-    // console.log(`\x1b[33m`, `
-    // Querying departments...
-    // `, `\x1b[00m`);
+    console.log(`\x1b[33m`, `
+    Querying departments...
+    `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       deptList.push(rows[i].name);
     }
-    // console.table(deptList);
-    // console.log(deptList);
+    console.table(rows);
+    console.log(deptList);
   });
 }
 startGetRoles = () => {
@@ -35,14 +36,14 @@ startGetRoles = () => {
   const params = [];
   db.query(sql, params, function(err, rows, fields) {
     if (err) throw err;
-    // console.log(`\x1b[33m`, `
-    // Querying roles...
-    // `, `\x1b[00m`);
+    console.log(`\x1b[33m`, `
+    Querying roles...
+    `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       roleList.push(rows[i].title);
     }
-    // console.table(rows);
-    // console.log(roleList);
+    console.table(rows);
+    console.log(roleList);
   });
 }
 startGetEmps = () => {
@@ -53,7 +54,8 @@ startGetEmps = () => {
     roles.title, 
     roles.salary, 
     departments.name AS department, 
-    CONCAT(managers.first_name, ' ', managers.last_name) AS manager
+    CONCAT(managers.first_name, ' ', managers.last_name) AS manager,
+    employees.id
   FROM employees
   LEFT JOIN roles ON employees.role_id = roles.id
   LEFT JOIN departments ON roles.department_id = departments.id
@@ -62,14 +64,21 @@ startGetEmps = () => {
   const params = [];
   db.query(sql, params, (err, rows, fields) => {
     if (err) throw err;
-    // console.log(`\x1b[33m`, `
-    // Querying employees...
-    // `, `\x1b[00m`);
+    console.log(`\x1b[33m`, `
+    Querying employees...
+    `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       empList.push(rows[i].name);
     }
-    // console.table(rows);
-    // console.log(empList);
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].manager === null) {
+        manList.push(rows[i].name);
+      }
+    }
+    console.table(rows);
+    console.log(rows);
+    console.log(empList);
+    console.log(manList);
   })
 }
 db.connect((err) => {
@@ -80,8 +89,8 @@ db.connect((err) => {
   startGetDepts();
   startGetRoles();
   startGetEmps();
-  //setTimeout(promptBeginning, 1000);
-  promptBeginning();
+  setTimeout(promptBeginning, 1000);
+  // promptBeginning();
 });
 
 const beginList = [
@@ -140,9 +149,9 @@ const promptAddRole = () => {
     console.log(roleInfo.roleDept);
     addRole(roleInfo);
   })
-  .then(() => promptBeginning())
   .catch(err => err);
 }
+
 
 const promptAddEmp = () => {
   return inquirer.prompt ([
@@ -168,18 +177,31 @@ const promptAddEmp = () => {
     },
     {
       type: 'confirm',
-      name: 'managerConfirm',
-      message: `Is this Employee a manager?`
+      name: 'hasManagerConfirm',
+      message: 'Does this employee have a manager?'
     },
     {
       type: 'list',
-      name: 'managerDept',
-      message: 'Which department is this employee a manager of?',
-      choices: deptList,
-      when: ({ managerConfirm }) => managerConfirm
+      name: 'managerName',
+      message: `Who is this employee's manager?`,
+      choices: manList,
+      when: ({ hasManagerConfirm }) => hasManagerConfirm
     }
   ])
   .then(empInfo => {
+    if (!empInfo.managerName) {
+      empInfo.managerName = '';
+    } else {
+      //convert managerName into a managerId
+      let managerId;
+      for (let i = 0; i < manList.length; i++) {
+        if (empInfo.managerName === manList[i]) {
+          managerId = i + 1;
+        }
+      }
+      empInfo.managerId = managerId;
+    }
+    //convert roleTitle into a roleId
     let empRoleId;
     for (let i = 0; i < roleList.length; i++) {
       if (empInfo.roleTitle === roleList[i]) {
@@ -189,7 +211,6 @@ const promptAddEmp = () => {
     empInfo.roleId = empRoleId;
     addEmp(empInfo);
   })
-  .then(() => promptBeginning())
   .catch(err => err);
 }
 
@@ -243,7 +264,6 @@ getDepts = () => {
     console.log(`
     
     `)
-    deptList = rows;
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -390,8 +410,14 @@ addRole = roleInfo => {
 }
 //function for querying adding an employee
 addEmp = empInfo => {
-  if (empInfo.managerConfirm === true) {
+  //push onto manager array if employee is a manager
+  console.log('\x1b[33m', 'empInfo Object', '\x1b[00m');
+  console.log(empInfo);
+  if (empInfo.hasManagerConfirm === false) {
     empInfo.managerId = null;
+  } else {
+    empInfo.managerId = parseInt(empInfo.managerId, 10);
+    console.log(empInfo.managerId);
   }
   const sql = `
   INSERT INTO employees 
@@ -399,6 +425,7 @@ addEmp = empInfo => {
   VALUES (?, ?, ?, ?)
   `;
   const params = [empInfo.firstName, empInfo.lastName, parseInt(empInfo.roleId, 10), empInfo.managerId];
+  console.log('\x1b[33m', 'query parameters', '\x1b[00m');
   console.log(params);
   console.log(`\x1b[33m`, `
   Querying Add An Employee...

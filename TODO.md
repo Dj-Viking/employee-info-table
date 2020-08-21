@@ -25,20 +25,20 @@
   - DONE job titles, departments, 
   - DONE salaries, and 
   - DONE managers that the employees report to
-* WHEN I choose to add a department
-* THEN I am prompted to enter 
-  - the name of the department and that department is added to the database
-* WHEN I choose to add a role
-* THEN I am prompted to enter the 
-  - name, 
-  - salary, and 
-  - department for the role and 
-  - that role is added to the database
-* WHEN I choose to add an employee
-* THEN I am prompted to enter the employee’s
-  - first name, 
-  - last name, 
-  - role, and 
+* DONE WHEN I choose to add a department
+* DONE THEN I am prompted to enter 
+  - DONE the name of the department and that department is added to the database
+* DONE WHEN I choose to add a role
+* DONE THEN I am prompted to enter the 
+  - DONE name, 
+  - DONE salary, and 
+  - DONE department for the role and
+  - DONE role is added to the database
+* DONE WHEN I choose to add an employee
+* DONE THEN I am prompted to enter the employee’s
+  - DONE first name, 
+  - DONE last name, 
+  - DONE role, and 
   - manager and 
   - that employee is added to the database
 * WHEN I choose to update an employee role

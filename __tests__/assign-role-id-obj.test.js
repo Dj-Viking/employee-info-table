@@ -17,12 +17,12 @@ test('check if object property is the number of the index of the role in the arr
   empInfo.roleTitle = 'Software Engineer';
   let empRoleId;
   for (let i = 0; i < roleList.length; i++) {
-    if (empInfo.roleTitle === roleList[i]) {
-      empRoleId = i;
+    if (empInfo.roleTitle === roleList[i]) {//account for the object that has the property title roleList[i].title
+      empRoleId = i + 1;
     }
   }
   empInfo.roleId = empRoleId;
-  console.log(parseInt(3));
-  expect(empInfo.roleId).toBe(3);
+  //console.log(parseInt(4));
+  expect(empInfo.roleId).toBe(4);
 
 })
