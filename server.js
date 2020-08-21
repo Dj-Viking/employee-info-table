@@ -18,14 +18,14 @@ startGetDepts = () => {
   const params = [];
   db.query(sql, params, function(err, rows, fields) {
     if (err) throw err;
-    console.log(`\x1b[33m`, `
-    Querying departments...
-    `, `\x1b[00m`);
+    // console.log(`\x1b[33m`, `
+    // Querying departments...
+    // `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       deptList.push(rows[i].name);
     }
-    console.table(deptList);
-    console.log(deptList);
+    // console.table(deptList);
+    // console.log(deptList);
   });
 }
 startGetRoles = () => {
@@ -35,14 +35,14 @@ startGetRoles = () => {
   const params = [];
   db.query(sql, params, function(err, rows, fields) {
     if (err) throw err;
-    console.log(`\x1b[33m`, `
-    Querying roles...
-    `, `\x1b[00m`);
+    // console.log(`\x1b[33m`, `
+    // Querying roles...
+    // `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       roleList.push(rows[i].title);
     }
-    console.table(rows);
-    console.log(roleList);
+    // console.table(rows);
+    // console.log(roleList);
   });
 }
 startGetEmps = () => {
@@ -62,26 +62,26 @@ startGetEmps = () => {
   const params = [];
   db.query(sql, params, (err, rows, fields) => {
     if (err) throw err;
-    console.log(`\x1b[33m`, `
-    Querying employees...
-    `, `\x1b[00m`);
+    // console.log(`\x1b[33m`, `
+    // Querying employees...
+    // `, `\x1b[00m`);
     for (let i = 0; i < rows.length; i++) {
       empList.push(rows[i].name);
     }
-    console.table(rows);
-    console.log(empList);
+    // console.table(rows);
+    // console.log(empList);
   })
 }
 db.connect((err) => {
   if (err) throw err;
   console.log("\x1b[33m", `
-
   mysql connected!
   `, "\x1b[00m" );
   startGetDepts();
   startGetRoles();
   startGetEmps();
-  setTimeout(promptBeginning, 1000);
+  //setTimeout(promptBeginning, 1000);
+  promptBeginning();
 });
 
 const beginList = [
@@ -93,11 +93,6 @@ const beginList = [
   'Add An Employee',
   'Update An Employee Role'
 ];
-//how to populate this on connect to update the array from whats
-// in the database??
-// yes just populate it as the server starts and connects to the database
-
-
 
 const promptAddDept = () => {
   return inquirer.prompt ([
@@ -135,6 +130,14 @@ const promptAddRole = () => {
   ])
   .then(roleInfo => {
     roleList.push(roleInfo.roleTitle);
+    let roleDeptId;
+    for (let i = 0; i < deptList.length; i++) {
+      if (roleInfo.roleDept === deptList[i]) {
+        roleDeptId = i + 1;
+      }
+    }
+    roleInfo.roleDeptId = roleDeptId;
+    console.log(roleInfo.roleDept);
     addRole(roleInfo);
   })
   .then(() => promptBeginning())
@@ -416,7 +419,7 @@ addEmp = empInfo => {
 }
 //function for querying updating an employee
 
-//function for querying updating employing managers
+//function for querying updating employee managers
 
 //function for querying viewing employees by only manager
 
