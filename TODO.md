@@ -40,8 +40,8 @@
   - DONE first name, 
   - DONE last name, 
   - DONE role, and 
-  - manager and 
-  - that employee is added to the database
+  - DONE manager and 
+  - DONE that employee is added to the database
 * WHEN I choose to update an employee role
 * THEN I am prompted to select 
   - an employee to update 
