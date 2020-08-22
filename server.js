@@ -8,16 +8,17 @@ const empList = [];
 const manObjs = [];
 const manList = [];
 const beginList = [
+  'View All Employees',
   'View All Departments',
   'View All Roles',
-  'View All Employees',
   'View All Managers',
   'View Employees By Department',
   'Add A Department',
   'Add A Role',
   'Add An Employee',
   'Update An Employee Role',
-  'Update An Employee Manager'
+  'Update An Employee Manager',
+  'Delete A Department'
 ];
 startGetDepts = () => {
   const sql = `select * from departments ORDER BY id ASC`;
@@ -181,7 +182,7 @@ const promptAddEmp = () => {
     {
       type: 'list',
       name: 'managerName',
-      message: `Who is this employee's manager?`,
+      message: `Who is this employee's manager? \n    If this employee doesn't need a manager select NaN`,
       choices: manList
     }
   ])
@@ -260,7 +261,7 @@ const promptUpdateEmpMgr = () => {
     {
       type: 'list',
       name: 'updateEmpMgrName',
-      message: 'Who will be their new manager?',
+      message: 'Who will be their new manager? \n   If removing a manager select NaN',
       choices: manList
     }
   ])
@@ -330,13 +331,16 @@ const promptBeginning = () => {
     if (data.queryChoice === 'View Employees By Department') {
       viewEmpByDept();
     }
+    if (data.queryChoice === 'Delete A Department') {
+      delDept();
+    }
   })
   .catch(err => err);
 }
 
 getDepts = () => {
   const sql = `
-  SELECT id, name FROM departments
+  select * from departments ORDER BY id ASC
   `;
   const params = [];
   console.log(`\x1b[33m`, `
@@ -500,7 +504,11 @@ addEmp = empInfo => {
   //push onto manager array if employee is a manager
   console.log('\x1b[33m', 'empInfo Object', '\x1b[00m');
   console.log(empInfo);
-  empInfo.managerId = parseInt(empInfo.managerId, 10);
+  if (isNaN(empInfo.managerName)) {
+    empInfo.managerId = null;
+  } else {
+    empInfo.managerId = parseInt(empInfo.managerId, 10);
+  }
   console.log(empInfo.managerId);
   const sql = `
   INSERT INTO employees 
@@ -574,7 +582,10 @@ updateEmpMgr = updateEmpMgrInfo => {
 //function for querying viewing employees by only manager
 getManagers = () => {
   const sql = `
-  SELECT employees.id, CONCAT(first_name, ' ', last_name) AS name FROM employees WHERE manager_id IS NULL;
+  SELECT 
+    employees.id, 
+    CONCAT(first_name, ' ', last_name) AS name 
+  FROM employees WHERE manager_id IS NULL;
   `
   const params = [];
   db.promise().query(sql, params, (err, rows, fields) => {
@@ -596,7 +607,6 @@ viewEmpByDept = () => {
   FROM employees
   LEFT JOIN roles ON employees.role_id = roles.id
   LEFT JOIN departments ON roles.department_id = departments.id
-
   `;
   const params = [];
   db.promise().query(sql, params, (err, rows, fields) => {
@@ -610,7 +620,9 @@ viewEmpByDept = () => {
 }
 //functions for querying deleting 
 //dept
+delDept = delDeptInfo => {
 
+}
 //role
 
 //employee
