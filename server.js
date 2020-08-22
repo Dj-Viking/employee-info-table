@@ -18,7 +18,8 @@ const beginList = [
   'Add An Employee',
   'Update An Employee Role',
   'Update An Employee Manager',
-  'Delete A Department'
+  'Delete A Department',
+  'Exit'
 ];
 startGetDepts = () => {
   const sql = `select * from departments ORDER BY id ASC`;
@@ -211,7 +212,7 @@ const promptAddEmp = () => {
       }
     }
     empInfo.roleId = empRoleId;
-    empInfo.fullName = `${empInfo.firstName} ${empInfo.lastName}`
+    empInfo.fullName = `${empInfo.firstName} ${empInfo.lastName}`;
     empList.push(empInfo.fullName);
     addEmp(empInfo);
   })
@@ -334,6 +335,9 @@ const promptBeginning = () => {
     if (data.queryChoice === 'Delete A Department') {
       delDept();
     }
+    if (data.queryChoice === 'Exit') {
+      db.end();
+    }
   })
   .catch(err => err);
 }
@@ -347,14 +351,12 @@ getDepts = () => {
   Querying departments...
   `, `\x1b[00m`);
   db.promise().query(sql, params, function(err, rows, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -372,15 +374,13 @@ getRoles = () => {
   Querying roles...
   `, `\x1b[00m`);
   db.promise().query(sql, params, function(err, rows, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     //console.log(fields);
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -434,20 +434,17 @@ getEmps = () => {
   Querying employees...
   `, `\x1b[00m`);
   db.promise().query(sql, params, function(err, rows, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
   .catch(err => err);
 }
-
 
 //function for querying adding a department 
 addDept = deptInfo => {
@@ -459,14 +456,12 @@ addDept = deptInfo => {
   Querying Add Department...
   `, `\x1b[00m`);
   db.promise().query(sql, params, (err, rows, fields) => {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -486,14 +481,12 @@ addRole = roleInfo => {
   Querying Add A Role...
   `, `\x1b[00m`);
   db.promise().query(sql, params, (err, rows, fields) => {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -522,14 +515,12 @@ addEmp = empInfo => {
   Querying Add An Employee...
   `, `\x1b[00m`);
   db.promise().query(sql, params, (err, rows, fields) => {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
     
-    `)
+    `);
     console.table(rows);
   })
   .then(() => promptBeginning())
@@ -544,9 +535,7 @@ updateEmpRole = empRoleUpdateInfo => {
   `;
   const params = [empRoleUpdateInfo.empRoleId, empRoleUpdateInfo.firstName]
   db.promise().query(sql, params, (err, rows, fields) => {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
   })
   .then(([rows, fields]) => {
     console.log(`
@@ -621,12 +610,58 @@ viewEmpByDept = () => {
 //functions for querying deleting 
 //dept
 delDept = delDeptInfo => {
+const sql = `
 
+`;
+const params = [];
+db.promise().query(sql, params, (err, rows, fields) => {
+  if (err) throw err;
+})
+.then(([rows, fields]) => {
+  console.log(`
+  
+  `);
+  console.table(rows);
+})
+.then(() => promptBeginning())
+.catch(err => err);
 }
 //role
-
+delRole = delRoleInfo => {
+  const sql = `
+  
+  `;
+  const params = [];
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.log(`
+    
+    `);
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 //employee
-
+delEmp = delEmpInfo => {
+  const sql = `
+  
+  `;
+  const params = [];
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.log(`
+    
+    `);
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 
 
 //some prompts will execute SQL queries to display the tables
