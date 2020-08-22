@@ -1,20 +1,22 @@
-const mysql = require('mysql2');
+const db = require('./db/database.js');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
-//create connection to mysql2 server
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  port: '3306',
-  password: 'root123@',
-  database: 'employees_db'
-});
 //inquirer lists getting populated by database
 const deptList = [];
 const roleList = [];
 const empList = [];
 const manObjs = [];
 const manList = [];
+const beginList = [
+  'View All Departments',
+  'View All Roles',
+  'View All Employees',
+  'Add A Department',
+  'Add A Role',
+  'Add An Employee',
+  'Update An Employee Role',
+  'Update An Employee Manager'
+];
 startGetDepts = () => {
   const sql = `select * from departments ORDER BY id ASC`;
   const params = [];
@@ -72,7 +74,10 @@ startGetEmps = () => {
       empList.push(rows[i].name);
     }
     for (let i = 0; i < rows.length; i++) {
-      if (rows[i].manager === null) {
+      if (rows[i].name === 'Mike Wazowski' ||
+          rows[i].name === 'Bruce Lee' ||
+          rows[i].name === 'Super Mario' ||
+          rows[i].name === 'Sarah Marshall') {
         manObjs.push(rows[i]);
       }
     }
@@ -83,6 +88,8 @@ startGetEmps = () => {
     for (let i = 0; i < manObjs.length; i++) {
       manList.push(manObjs[i].name);
     }
+    const nullVal = NaN;
+    manList.push(nullVal);
     console.log(manList);
   })
 }
@@ -97,16 +104,6 @@ db.connect((err) => {
   setTimeout(promptBeginning, 1000);
   // promptBeginning();
 });
-
-const beginList = [
-  'View All Departments',
-  'View All Roles',
-  'View All Employees',
-  'Add A Department',
-  'Add A Role',
-  'Add An Employee',
-  'Update An Employee Role'
-];
 
 const promptAddDept = () => {
   return inquirer.prompt ([
@@ -211,6 +208,8 @@ const promptAddEmp = () => {
       }
     }
     empInfo.roleId = empRoleId;
+    empInfo.fullName = `${empInfo.firstName} ${empInfo.lastName}`
+    empList.push(empInfo.fullName);
     addEmp(empInfo);
   })
   .catch(err => err);
@@ -248,6 +247,46 @@ const promptUpdateRole = () => {
   })
 }
 
+const promptUpdateEmpMgr = () => {
+  return inquirer.prompt ([
+    {
+      type: 'list',
+      name: 'updateEmpChoice',
+      message: "Which employee do you want to update the manager for?",
+      choices: empList
+    },
+    {
+      type: 'list',
+      name: 'updateEmpMgrName',
+      message: 'Who will be their new manager?',
+      choices: manList
+    }
+  ])
+  .then(empMgrUpdateInfo => {
+    let firstName;
+    let splitName = empMgrUpdateInfo.updateEmpChoice.split(' ');
+    firstName = splitName[0];
+    empMgrUpdateInfo.firstName = firstName;
+    //convert manager name into a manager_id for the query
+    let managerId;
+    for (let i = 0; i < manList.length; i++) {
+      if (empMgrUpdateInfo.updateEmpMgrName === manList[i]) {
+        if (manList.indexOf(manList[i]) === 0) {
+          managerId = i + 1;
+        } else if (manList.indexOf(manList[i]) === 1) {
+          managerId = i + 2;
+        } else if (manList.indexOf(manList[i]) === 2) {
+          managerId = i + 3;
+        } else if (manList.indexOf(manList[i]) === 3) {
+          managerId = i + 4;
+        }
+      }
+    }
+    empMgrUpdateInfo.managerId = managerId;
+    updateEmpMgr(empMgrUpdateInfo);
+  })
+}
+
 const promptBeginning = () => {
   return inquirer.prompt(
     {
@@ -279,6 +318,9 @@ const promptBeginning = () => {
     }
     if (data.queryChoice === 'Update An Employee Role') {
       promptUpdateRole();
+    }
+    if (data.queryChoice === 'Update An Employee Manager') {
+      promptUpdateEmpMgr();
     }
   })
   .catch(err => err);
@@ -500,6 +542,26 @@ updateEmpRole = empRoleUpdateInfo => {
   .catch(err => err);
 }
 //function for querying updating employee managers
+updateEmpMgr = updateEmpMgrInfo => {
+  const sql = `
+  UPDATE employees 
+  SET manager_id = ? 
+  WHERE first_name = ?
+  `;
+  const params = [updateEmpMgrInfo.managerId, updateEmpMgrInfo.firstName];
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.log(`
+    
+    `);
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
+
 
 //function for querying viewing employees by only manager
 

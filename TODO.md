@@ -50,7 +50,7 @@
 
 ## BONUS
 
-* Update employee managers.
+* DONE Update employee managers.
 
 * View employees by manager.
 
