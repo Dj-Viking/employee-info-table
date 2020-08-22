@@ -12,6 +12,7 @@ const beginList = [
   'View All Roles',
   'View All Employees',
   'View All Managers',
+  'View Employees By Department',
   'Add A Department',
   'Add A Role',
   'Add An Employee',
@@ -326,6 +327,9 @@ const promptBeginning = () => {
     if (data.queryChoice === 'View All Managers') {
       getManagers();
     }
+    if (data.queryChoice === 'View Employees By Department') {
+      viewEmpByDept();
+    }
   })
   .catch(err => err);
 }
@@ -419,7 +423,7 @@ getEmps = () => {
   FROM employees
   LEFT JOIN roles ON employees.role_id = roles.id
   LEFT JOIN departments ON roles.department_id = departments.id
-  LEFT JOIN employees managers ON managers.id = employees.manager_id;
+  LEFT JOIN employees managers ON managers.id = employees.manager_id
   `
   const params = [];
   console.log(`\x1b[33m`, `
@@ -583,7 +587,27 @@ getManagers = () => {
   .catch(err => err);
 }
 //function for querying viewing employees by department
+viewEmpByDept = () => {
+  const sql = `
+  SELECT 
+    employees.id, 
+    CONCAT(employees.first_name, ' ', employees.last_name) AS name,
+    departments.name AS department
+  FROM employees
+  LEFT JOIN roles ON employees.role_id = roles.id
+  LEFT JOIN departments ON roles.department_id = departments.id
 
+  `;
+  const params = [];
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 //functions for querying deleting 
 //dept
 
