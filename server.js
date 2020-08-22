@@ -11,6 +11,7 @@ const beginList = [
   'View All Departments',
   'View All Roles',
   'View All Employees',
+  'View All Managers',
   'Add A Department',
   'Add A Role',
   'Add An Employee',
@@ -322,6 +323,9 @@ const promptBeginning = () => {
     if (data.queryChoice === 'Update An Employee Manager') {
       promptUpdateEmpMgr();
     }
+    if (data.queryChoice === 'View All Managers') {
+      getManagers();
+    }
   })
   .catch(err => err);
 }
@@ -564,7 +568,20 @@ updateEmpMgr = updateEmpMgrInfo => {
 
 
 //function for querying viewing employees by only manager
-
+getManagers = () => {
+  const sql = `
+  SELECT employees.id, CONCAT(first_name, ' ', last_name) AS name FROM employees WHERE manager_id IS NULL;
+  `
+  const params = [];
+  db.promise().query(sql, params, (err, rows, fields) => {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
 //function for querying viewing employees by department
 
 //functions for querying deleting 
