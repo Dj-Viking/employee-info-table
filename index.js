@@ -5,7 +5,6 @@ const inquirer = require('inquirer');
 let deptList = [];
 let roleList = [];
 let empList = [];
-let manObjs = [];
 let manList = [];
 const beginList = [
   'View All Employees',
@@ -18,6 +17,7 @@ const beginList = [
   'Add An Employee',
   'Update An Employee Role',
   'Update An Employee Manager',
+  'Update An Employee Department',
   'Delete A Department',
   'Exit'
 ];
@@ -33,9 +33,6 @@ const startGetDepts = () => {
     console.log(`\x1b[33m`, `
     Querying departments...
     `, `\x1b[00m`);
-    // for (let i = 0; i < rows.length; i++) {
-    //   deptList.push(rows[i]);
-    // }
     deptList = rows;
     //console.table(rows);
     console.log(deptList);
@@ -54,9 +51,6 @@ const startGetRoles = () => {
     console.log(`\x1b[33m`, `
     Querying roles...
     `, `\x1b[00m`);
-    // for (let i = 0; i < rows.length; i++) {
-    //   roleList.push(rows[i]);
-    // }
     roleList = rows;
     console.log(roleList);
   });
@@ -75,9 +69,6 @@ const startGetEmps = () => {
     console.log(`\x1b[33m`, `
     Querying employees...
     `, `\x1b[00m`);
-    // for (let i = 0; i < rows.length; i++) {
-    //   empList.push(rows[i]);
-    // }
     empList = rows;
     let iterated = []
     for (let i = 0; i < rows.length; i++) {
@@ -92,14 +83,9 @@ const startGetEmps = () => {
     //console.table(rows);
     //console.log(rows);
     console.log(empList);
-    // for (let i = 0; i < manObjs.length; i++) {
-    //   manList.push(manObjs[i].name);
-    // }
-    //const nullVal = NaN;
     console.log(`\x1b[33m`, `
     Querying managers...
     `, `\x1b[00m`);
-    //manObjs.push(nullVal);
     console.log(manList);
   });
 }
@@ -112,8 +98,7 @@ db.connect((err) => {
   startGetRoles();
   startGetEmps();
   //promptBeginning();
-  
-  setTimeout(promptBeginning, 1000);
+  setTimeout(promptBeginning, 500);
 });
 
 const promptAddDept = () => {
@@ -150,20 +135,6 @@ const promptAddRole = () => {
     }
   ])
   .then(roleInfo => {
-    // let roleDeptId;
-    // for (let i = 0; i < deptList.length; i++) {
-      //   if (roleInfo.roleDept === deptList[i]) {
-        //     roleDeptId = i + 1;
-        //   }
-        // }
-    // roleInfo.roleDeptId = roleDeptId;
-    // let newRoleObj = {};
-    // newRoleObj = {
-    //   name: roleInfo.name,
-    //   value: roleList.length + 1
-    // }
-    // roleList.push(newRoleObj);
-    // console.log(roleInfo.roleDept);
     addRole(roleInfo);
   })
   .catch(err => err);
@@ -182,10 +153,6 @@ const promptAddEmp = () => {
       message: `What is this employee's last name?`
     },
     {
-      //DONE instead of asking to input employee id
-      // DONE make a list of available employee roles to choose
-      // DONE after making a new role push that into the array
-      // then convert the role name into the id to place into the query
       type: 'list',
       name: 'roleId',
       message: `What is this employee's role?`,
@@ -194,45 +161,13 @@ const promptAddEmp = () => {
     {
       type: 'list',
       name: 'managerId',
-      message: `Who is this employee's manager? \n    If this employee doesn't need a manager select none`,
+      message: `Who is this employee's manager? \n If this employee doesn't need a manager select none`,
       //pass manNamesAndIds array of objects which was queried specifically for this prompt
       choices: [...manList, {name: "None", value: null }]
     }
   ])
   .then(empInfo => {
-      //convert managerName into a managerId
-      console.log('checking if i can get values from the list array of objects');
-      console.log(empInfo.managerId);
-      //let managerId;
-      // for (let i = 0; i < manObjs.length; i++) {
-      //   if (empInfo.managerName === manObjs[i].name) {
-      //     if (manObjs.indexOf(manObjs[i].name) === 0) {
-      //       managerId = i + 1;
-      //     } else if (manObjs.indexOf(manObjs[i].name) === 1) {
-      //       managerId = i + 2;
-      //     } else if (manObjs.indexOf(manObjs[i].name) === 2) {
-      //       managerId = i + 3;
-      //     } else if (manObjs.indexOf(manObjs[i].name) === 3) {
-      //       managerId = i + 4;
-      //     }
-      //   }
-      // }
-      //empInfo.managerId = managerId;
-    //convert roleTitle into a roleId
-    // let empRoleId;
-    // for (let i = 0; i < roleList.length; i++) {
-    //   if (empInfo.roleTitle === roleList[i]) {
-    //     empRoleId = i + 1;
-    //   }
-    // }
-    // empInfo.roleId = empRoleId;
-    //empInfo.name = `${empInfo.firstName} ${empInfo.lastName}`;
-    //let newEmpObj = {};
-    //newEmpObj = {
-    //  name: empInfo.name,
-    //  value: empList.length + 1
-    //}
-    //empList.push(newEmpObj);
+    //console.log(empInfo.managerId);
     console.log(empList);
     addEmp(empInfo);
   })
@@ -256,18 +191,6 @@ const promptUpdateRole = () => {
   ])
   .then(empRoleUpdateInfo => {
     console.log(empRoleUpdateInfo.empId);
-    // let firstName;
-    // let splitName = empRoleUpdateInfo.name.split(' ');
-    // firstName = splitName[0];
-    // empRoleUpdateInfo.firstName = firstName;
-    //convert roleTitle into a roleId
-    // let empRoleId;
-    // for (let i = 0; i < roleList.length; i++) {
-    //   if (empRoleUpdateInfo.role === roleList[i]) {
-    //     empRoleId = i + 1;
-    //   }
-    // }
-    // empRoleUpdateInfo.empRoleId = empRoleId;
     console.log(empRoleUpdateInfo);
     updateEmpRole(empRoleUpdateInfo);
   })
@@ -285,39 +208,19 @@ const promptUpdateEmpMgr = () => {
     {
       type: 'list',
       name: 'manId',
-      message: 'Who will be their new manager? \n   If removing a manager select NaN',
+      message: 'Who will be their new manager? \n If this employee will not have a manager select "None"',
       choices: [...manList, {name: "None", value: null}]
     }
   ])
   .then(empMgrUpdateInfo => {
     console.log(empMgrUpdateInfo);
-    // let firstName;
-    // let splitName = empMgrUpdateInfo.updateEmpChoice.split(' ');
-    // firstName = splitName[0];
-    // empMgrUpdateInfo.firstName = firstName;
-    //convert manager name into a manager_id for the query
-    // let managerId;
-    // for (let i = 0; i < manList.length; i++) {
-    //   if (empMgrUpdateInfo.updateEmpMgrName === manList[i]) {
-    //     if (manList.indexOf(manList[i]) === 0) {
-    //       managerId = i + 1;
-    //     } else if (manList.indexOf(manList[i]) === 1) {
-    //       managerId = i + 2;
-    //     } else if (manList.indexOf(manList[i]) === 2) {
-    //       managerId = i + 3;
-    //     } else if (manList.indexOf(manList[i]) === 3) {
-    //       managerId = i + 4;
-    //     }
-    //   }
-    // }
-    // empMgrUpdateInfo.managerId = managerId;
     updateEmpMgr(empMgrUpdateInfo);
   })
   .catch(err => err);
 }
 
 const promptDelDept = () => {
-  //array of objects that have a property name
+  //array of objects that have a property name and value of their id
   return inquirer.prompt ([
     {
       type: 'list',
@@ -333,12 +236,13 @@ const promptDelDept = () => {
   })
   .catch(err => err);
 }
-
+//promptBeginning();
+//cant access this function here...but its called in an earlier function at database connect time
+// maybe initialization happens at the same time as connection
+// which then promptBeginning can be accessed since it was initialized at connection time
+// and then invoked inside the connection function...interesting
 const promptBeginning = () => {
   console.log(`
-  
-  
-  
   
   
   `)
@@ -382,6 +286,9 @@ const promptBeginning = () => {
       //query database to get only managers names and id's in an array of objects
       // with properties only name and id and spread the array in the inquirer list
       promptUpdateEmpMgr();
+    }
+    if (data.queryChoice === 'Update An Employee Department') {
+      promptUpdateEmpDept();
     }
     if (data.queryChoice === 'View All Managers') {
       getManagers();
@@ -446,34 +353,6 @@ getRoles = () => {
 }
 
 getEmps = () => {
-  // const sql = `
-  // SELECT employees.id AS employee_id,
-  //        employees.first_name AS first_name, 
-  //        employees.last_name AS last_name,
-  //        employees.manager_id AS manager_name, 
-  //        roles.title
-  // FROM employees, manager_name
-  // WHERE employees.manager_id = employees.first_name
-  // LEFT JOIN employees manager_name ON employees.manager_id > employees.id
-  // LEFT JOIN roles ON employees.role_id = roles.id
-  // ORDER BY manager_name DESC
-  // `;
-  // const sql = `
-  // SELECT employees.id AS emp_id, employees.first_name AS emp_name,
-  //        employees.manager_id AS manager_id, employees.first_name AS manager_name
-  //        FROM employees
-  //        WHERE employees.id > employees.first_name;
-  // `
-  // const sql = `
-  // SELECT
-  //   employees.id, roles.title AS job_title, departments.name AS dept_name,
-  //   CONCAT(employees.first_name, ' ', employees.last_name) AS employee_name,
-  //   CONCAT(managers.first_name, ' ', managers.last_name) AS Reports_to
-  // FROM employees
-  // LEFT JOIN managers ON employees.manager_id = managers.role_id
-  // LEFT JOIN roles ON employees.role_id = roles.id
-  // LEFT JOIN departments ON roles.department_id = departments.id
-  // `
   const sql = `
   SELECT 
     employees.id, 
@@ -525,7 +404,7 @@ addDept = deptInfo => {
   })
   .then(() =>{
     startGetDepts();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }
@@ -554,13 +433,12 @@ addRole = roleInfo => {
   })
   .then(() => {
     startGetRoles();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }
 //function for querying adding an employee
 addEmp = empInfo => {
-  //push onto manager array if employee is a manager
   //console.log('\x1b[33m', 'empInfo Object', '\x1b[00m');
   console.log(empInfo);
   //console.log(empInfo.managerId);
@@ -586,7 +464,7 @@ addEmp = empInfo => {
   })
   .then(() => {
     startGetEmps();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }
@@ -609,7 +487,7 @@ updateEmpRole = empRoleUpdateInfo => {
   })
   .then(() => {
     startGetEmps();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }
@@ -633,7 +511,7 @@ updateEmpMgr = updateEmpMgrInfo => {
   })
   .then(() => {
     startGetEmps();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }
@@ -696,7 +574,7 @@ db.promise().query(sql, params, (err, rows, fields) => {
 })
 .then(() => {
   startGetDepts();
-  setTimeout(promptBeginning, 1000);
+  setTimeout(promptBeginning, 500);
 })
 .catch(err => err);
 }
@@ -735,7 +613,7 @@ delEmp = delEmpInfo => {
   })
   .then(() => {
     startGetEmps();
-    setTimeout(promptBeginning, 1000);
+    setTimeout(promptBeginning, 500);
   })
   .catch(err => err);
 }

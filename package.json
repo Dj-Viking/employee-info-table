@@ -2,7 +2,7 @@
   "name": "employee-info-table",
   "version": "1.0.0",
   "description": "CRUD console application of an employee info table",
-  "main": "server.js",
+  "main": "index.js",
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
