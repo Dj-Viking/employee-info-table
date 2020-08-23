@@ -17,7 +17,6 @@ const beginList = [
   'Add An Employee',
   'Update An Employee Role',
   'Update An Employee Manager',
-  'Update An Employee Department',
   'Delete A Department',
   'Exit'
 ];
@@ -232,7 +231,6 @@ const promptDelDept = () => {
   .then(delDeptInfo => {
     delDept(delDeptInfo);
     console.log(delDeptInfo);
-
   })
   .catch(err => err);
 }
@@ -286,9 +284,6 @@ const promptBeginning = () => {
       //query database to get only managers names and id's in an array of objects
       // with properties only name and id and spread the array in the inquirer list
       promptUpdateEmpMgr();
-    }
-    if (data.queryChoice === 'Update An Employee Department') {
-      promptUpdateEmpDept();
     }
     if (data.queryChoice === 'View All Managers') {
       getManagers();
@@ -516,7 +511,6 @@ updateEmpMgr = updateEmpMgrInfo => {
   .catch(err => err);
 }
 
-
 //function for querying viewing employees by only manager
 getManagers = () => {
   const sql = `
@@ -560,7 +554,7 @@ viewEmpByDept = () => {
 //dept
 delDept = delDeptInfo => {
 const sql = `
-DELETE FROM departments WHERE departments.id = ?;
+DELETE FROM departments WHERE id = ?
 `;
 const params = [delDeptInfo.deptId];
 db.promise().query(sql, params, (err, rows, fields) => {
@@ -593,7 +587,10 @@ delRole = delRoleInfo => {
     `);
     console.table(rows);
   })
-  .then(() => promptBeginning())
+  .then(() => {
+    startGetRoles();
+    setTimeout(promptBeginning, 500);
+  })
   .catch(err => err);
 }
 //employee

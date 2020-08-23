@@ -57,7 +57,7 @@
 * DONE View employees by department.
 
 * Delete 
-  - departments, 
+  - DONE departments, 
   - roles, and 
   - employees.
 
