@@ -18,6 +18,7 @@ const beginList = [
   'Update An Employee Role',
   'Update An Employee Manager',
   'Delete A Department',
+  'Delete A Role',
   'Exit'
 ];
 //when querying for the lists.....maybe have to place an array of objects with a name property so that
@@ -224,7 +225,7 @@ const promptDelDept = () => {
     {
       type: 'list',
       name: 'deptId',
-      message: 'Which department do you want to delete',
+      message: 'Which department do you want to delete?',
       choices: deptList
     }
   ])
@@ -234,6 +235,22 @@ const promptDelDept = () => {
   })
   .catch(err => err);
 }
+
+const promptDelRole = () => {
+  return inquirer.prompt([
+    {
+      type: 'list',
+      name: 'roleId',
+      message: 'Which Role do you want to delete?',
+      choices: roleList
+    }
+  ])
+  .then(delRoleInfo => {
+    console.log(delRoleInfo);
+    delRole(delRoleInfo);
+  })
+}
+
 //promptBeginning();
 //cant access this function here...but its called in an earlier function at database connect time
 // maybe initialization happens at the same time as connection
@@ -294,6 +311,9 @@ const promptBeginning = () => {
     if (data.queryChoice === 'Delete A Department') {
       //query database to get only department name and id properties in an array of those objects
       promptDelDept();
+    }
+    if (data.queryChoice === 'Delete A Role') {
+      promptDelRole();
     }
     if (data.queryChoice === 'Exit') {
       db.end();
@@ -574,10 +594,11 @@ db.promise().query(sql, params, (err, rows, fields) => {
 }
 //role
 delRole = delRoleInfo => {
+  console.log(delRoleInfo);
   const sql = `
-
+  DELETE FROM roles where id = ?
   `;
-  const params = [];
+  const params = [delRoleInfo.roleId];
   db.promise().query(sql, params, (err, rows, fields) => {
     if (err) throw err;
   })
