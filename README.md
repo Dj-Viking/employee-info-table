@@ -3,12 +3,12 @@
 # Employee Info Table
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Node: JS](https://img.shields.io/badge/Node-JS-1abc5e.svg)](https://img.shields.io/)
-[![Database: MySQL](https://img.shields.io/badge/Database-MySQL-blue.svg)](https://img.shields.io/) [![Interface: Inquirer](https://img.shields.io/badge/Interface-Inquirer-6517D7.svg)](https://img.shields.io/) [![Operation: CRUDeholder](https://img.shields.io/badge/Operation-CRUD-red.svg)](https://img.shields.io/)
+[![Node: JS](https://img.shields.io/badge/Node-JS-b7b402.svg)](https://img.shields.io/)
+[![Database: MySQL](https://img.shields.io/badge/Database-MySQL-111AFF.svg)](https://img.shields.io/) [![Interface: Inquirer](https://img.shields.io/badge/Interface-Inquirer-00bf34.svg)](https://img.shields.io/) [![console: .table](https://img.shields.io/badge/console-.table-6517D7.svg)](https://img.shields.io/) [![Operation: CRUDeholder](https://img.shields.io/badge/Operation-CRUD-red.svg)](https://img.shields.io/)
 
 ## Description 
 
-Using Node.js with node packages: MySQL2 and Inquirer - Creating a CLI to a database of employee info and simulate a strictly back-end CRUD operation. Using JavaScript to communicate with a MySQL database to read/write, update, and delete information from the database. All with the interface created using Inquirer to easily manage a database.
+Using Node.js with node packages: console.table, MySQL2 and Inquirer - Creating a CLI to a database of employee info and simulate a strictly back-end CRUD operation. Using JavaScript to communicate with a MySQL database to read/write, update, and delete information from the database. All with the interface created using Inquirer to easily manage a database.
 
 ## Table of Contents
 * [Installation](#Installation)
