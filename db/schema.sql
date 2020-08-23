@@ -24,12 +24,12 @@ CREATE TABLE employees (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
-  role_id INT UNSIGNED NOT NULL,
+  role_id INT UNSIGNED,
   INDEX role_ind (role_id),
     CONSTRAINT fk_role 
     FOREIGN KEY (role_id) 
     REFERENCES roles(id) 
-    ON DELETE CASCADE,
+    ON DELETE SET NULL,
   manager_id INT UNSIGNED,
   INDEX man_ind (manager_id),
     CONSTRAINT fk_manager 
