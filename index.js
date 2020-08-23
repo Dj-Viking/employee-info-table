@@ -6,6 +6,7 @@ let deptList = [];
 let roleList = [];
 let empList = [];
 let manList = [];
+const spaceRegex = /\s/;
 const beginList = [
   'View All Employees',
   'View All Departments',

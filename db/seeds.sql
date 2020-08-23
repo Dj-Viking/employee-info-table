@@ -12,7 +12,7 @@ INSERT INTO roles (title, salary, department_id)
   VALUES
     ('Marketing Lead', 100000, 1),
     ('Marketing Specialist', 80000, 1),
-    ('Lead Engineer', 150000, 2),
+    ('Lead Programmer', 200000, 2),
     ('Software Engineer', 120000, 2),
     ('Magicks Manager', 60000, 3),
     ('Magician', 30000, 3),
