@@ -58,7 +58,7 @@
 
 * Delete 
   - DONE departments, 
-  - roles, and 
-  - employees.
+  - DONE roles, and 
+  - DONE employees.
 
 * View the total utilized budget of a department—i.e., the combined salaries of all employees in that department.

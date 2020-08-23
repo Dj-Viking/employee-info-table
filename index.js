@@ -19,6 +19,7 @@ const beginList = [
   'Update An Employee Manager',
   'Delete A Department',
   'Delete A Role',
+  'Delete An Employee',
   'Exit'
 ];
 //when querying for the lists.....maybe have to place an array of objects with a name property so that
@@ -241,13 +242,29 @@ const promptDelRole = () => {
     {
       type: 'list',
       name: 'roleId',
-      message: 'Which Role do you want to delete?',
+      message: 'Which role do you want to delete?',
       choices: roleList
     }
   ])
   .then(delRoleInfo => {
     console.log(delRoleInfo);
     delRole(delRoleInfo);
+  })
+  .catch(err => err);
+}
+
+const promptDelEmp = () => {
+  return inquirer.prompt ([
+    {
+      type: 'list',
+      name: 'empId',
+      message: 'Which employee do you want to delete from the list?',
+      choices: empList
+    }
+  ])
+  .then(delEmpInfo => {
+    console.log(delEmpInfo);
+    delEmp(delEmpInfo);
   })
 }
 
@@ -314,6 +331,9 @@ const promptBeginning = () => {
     }
     if (data.queryChoice === 'Delete A Role') {
       promptDelRole();
+    }
+    if (data.queryChoice === 'Delete An Employee') {
+      promptDelEmp();
     }
     if (data.queryChoice === 'Exit') {
       db.end();
@@ -588,6 +608,10 @@ db.promise().query(sql, params, (err, rows, fields) => {
 })
 .then(() => {
   startGetDepts();
+  //since role gets deleted on the cascade employee stays but 
+  // need to update the roles array too so that the inquirer list doesn't 
+  // have roles that got deleted on the cascade
+  startGetRoles();
   setTimeout(promptBeginning, 500);
 })
 .catch(err => err);
@@ -617,9 +641,9 @@ delRole = delRoleInfo => {
 //employee
 delEmp = delEmpInfo => {
   const sql = `
-  
+  DELETE FROM employees where id = ?
   `;
-  const params = [];
+  const params = [delEmpInfo.empId];
   db.promise().query(sql, params, (err, rows, fields) => {
     if (err) throw err;
   })
