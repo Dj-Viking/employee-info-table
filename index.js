@@ -11,6 +11,7 @@ const beginList = [
   'View All Departments',
   'View All Roles',
   'View All Managers',
+  'View Utilized Budget By All Departments',
   'View Employees By Department',
   'Add A Department',
   'Add A Role',
@@ -268,6 +269,21 @@ const promptDelEmp = () => {
   })
 }
 
+// const promptDeptUtil = () => {
+//   return inquirer.prompt([
+//     {
+//       type: 'list',
+//       name: 'deptId',
+//       message: 'Which department do you want to check the total utilized budget for?',
+//       choices: deptList
+//     }
+//   ])
+//   .then(deptUtilInfo => {
+//     console.log(deptUtilInfo);
+//     deptUtil(deptUtilInfo);
+//   })
+// }
+
 //promptBeginning();
 //cant access this function here...but its called in an earlier function at database connect time
 // maybe initialization happens at the same time as connection
@@ -334,6 +350,9 @@ const promptBeginning = () => {
     }
     if (data.queryChoice === 'Delete An Employee') {
       promptDelEmp();
+    }
+    if (data.queryChoice === 'View Utilized Budget By All Departments') {
+      deptUtil();
     }
     if (data.queryChoice === 'Exit') {
       db.end();
@@ -406,6 +425,32 @@ getEmps = () => {
   Querying employees...
   `, `\x1b[00m`);
   db.promise().query(sql, params, function(err, rows, fields) {
+    if (err) throw err;
+  })
+  .then(([rows, fields]) => {
+    console.log(`
+    
+    `);
+    console.table(rows);
+  })
+  .then(() => promptBeginning())
+  .catch(err => err);
+}
+
+deptUtil = () => {
+  const sql = `
+  SELECT 
+    SUM(roles.salary) AS employee_total_budget,
+    departments.name AS department
+  FROM employees, roles, departments
+  WHERE employees.role_id = roles.id AND roles.department_id = departments.id
+  GROUP BY departments.id
+  `
+  const params = [];
+  console.log(`\x1b[33m`, `
+  Checking Budget...
+  `, `\x1b[00m`);
+  db.promise().query(sql, params, (err, rows, fields) => {
     if (err) throw err;
   })
   .then(([rows, fields]) => {
