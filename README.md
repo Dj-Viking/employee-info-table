@@ -2,9 +2,12 @@
 
 # Employee Info Table
 
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Node: JS](https://img.shields.io/badge/Node-JS-b7b402.svg)](https://img.shields.io/)
-[![Database: MySQL](https://img.shields.io/badge/Database-MySQL-111AFF.svg)](https://img.shields.io/) [![Interface: Inquirer](https://img.shields.io/badge/Interface-Inquirer-00bf34.svg)](https://img.shields.io/) [![console: .table](https://img.shields.io/badge/console-.table-6517D7.svg)](https://img.shields.io/) [![Operation: CRUDeholder](https://img.shields.io/badge/Operation-CRUD-red.svg)](https://img.shields.io/)
+
+### Powered By 
+[![Node: JS](https://img.shields.io/badge/Node-JS-b7b402.svg)](https://nodejs.org/en/)
+[![npm: mysql2](https://img.shields.io/badge/npm-mysql2-111AFF.svg)](https://github.com/sidorares/node-mysql2) [![Database: MySQL](https://img.shields.io/badge/Database-MySQL-111AFF.svg)](https://downloads.mysql.com/archives/community/) [![Interface: Inquirer](https://img.shields.io/badge/Interface-Inquirer-00bf34.svg)](https://github.com/SBoudrias/Inquirer.js) [![console: .table](https://img.shields.io/badge/console-.table-6517D7.svg)](https://github.com/bahmutov/console.table) [![Operation: CRUDeholder](https://img.shields.io/badge/Operation-CRUD-red.svg)](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 
 ## Description 
 
