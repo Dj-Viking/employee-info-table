@@ -6,7 +6,6 @@ let deptList = [];
 let roleList = [];
 let empList = [];
 let manList = [];
-const spaceRegex = /\s/;
 const beginList = [
   'View All Employees',
   'View All Departments',
@@ -62,7 +61,8 @@ const startGetEmps = () => {
   const sql = `
   SELECT
     CONCAT(employees.first_name, ' ', employees.last_name) AS name,
-    employees.id AS value
+    employees.id AS value,
+    employees.manager_id AS manager
   FROM employees
   LEFT JOIN employees managers ON managers.id = employees.manager_id
   `
@@ -75,16 +75,13 @@ const startGetEmps = () => {
     empList = rows;
     let iterated = []
     for (let i = 0; i < rows.length; i++) {
-      if (rows[i].value === 1 ||//mike wazowski
-          rows[i].value === 3 ||//bruce lee
-          rows[i].value === 5 ||// super mario
-          rows[i].value === 7) { //sarah marshall
-          iterated.push(rows[i]);
+      if (rows[i].manager === null) {
+        iterated.push(rows[i]);
       }
     }
     manList = iterated;
     //console.table(rows);
-    //console.log(rows);
+    //console.log(fields);
     console.log(empList);
     console.log(`\x1b[33m`, `
     Querying managers...
@@ -109,10 +106,21 @@ const promptAddDept = () => {
     {
       type: 'input',
       name: 'name',
-      message: 'What is the name of the department you would like to add?'
+      message: 'What is the name of the department you would like to add?',
+      validate: name => {
+        console.log(name);
+        for (let i = 0; i < deptList.length; i++){
+          if (name === deptList[i].name) {
+            console.log("\x1b[33m", "Name cannot be a duplicate. Try again.", "\x1b");
+            return false;
+          }
+        }
+        return true;
+      }
     }
   ])
   .then(deptInfo => {
+    console.log(deptInfo);
     addDept(deptInfo);
   })
   .catch(err => err);
@@ -123,7 +131,14 @@ const promptAddRole = () => {
     {
       type: 'input',
       name: 'name',
-      message: 'What would you like this new role to be named?'
+      message: 'What would you like this new role to be named?',
+      validate: name => {
+        for(let i = 0; i < roleList.length; i++) {
+          if (name === roleList[i].name){
+            console.log("\x1b[33m", "Name cannot be a duplicate. Try again.", "\x1b");
+          }
+        }
+      }
     },
     {
       type: 'input',
@@ -269,21 +284,6 @@ const promptDelEmp = () => {
     delEmp(delEmpInfo);
   })
 }
-
-// const promptDeptUtil = () => {
-//   return inquirer.prompt([
-//     {
-//       type: 'list',
-//       name: 'deptId',
-//       message: 'Which department do you want to check the total utilized budget for?',
-//       choices: deptList
-//     }
-//   ])
-//   .then(deptUtilInfo => {
-//     console.log(deptUtilInfo);
-//     deptUtil(deptUtilInfo);
-//   })
-// }
 
 //promptBeginning();
 //cant access this function here...but its called in an earlier function at database connect time
@@ -467,14 +467,15 @@ deptUtil = () => {
 //function for querying adding a department 
 addDept = deptInfo => {
   console.log(deptInfo);
-  const sql = `
+  const sql = ` 
   INSERT INTO departments (name) VALUES (?)
   `;
-  const params = [deptInfo.name];
+  //const params = [deptInfo.name];
   console.log(`\x1b[33m`, `
   Querying Add Department...
   `, `\x1b[00m`);
-  db.promise().query(sql, params, (err, rows, fields) => {
+  db.promise().query(sql, deptInfo.name, (err, rows, fields) => {
+    console.log(rows);
     if (err) throw err;
   })
   .then(([rows, fields]) => {
