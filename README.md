@@ -53,8 +53,9 @@ module.exports = db;
 * Now you're __really__ ready for operation CRUD! 😎
 
 ## Usage
+- Check out the walkthrough video here by clicking this badge! 👇
+* [![You: Tube](https://img.shields.io/badge/You-Tube-ff0000.svg)](https://youtu.be/ODwdS7HbAdw)
 
-video link soon
 
 ## Credits
 
