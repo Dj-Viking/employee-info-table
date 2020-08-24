@@ -136,6 +136,9 @@ const promptAddRole = () => {
         for(let i = 0; i < roleList.length; i++) {
           if (name === roleList[i].name){
             console.log("\x1b[33m", "Name cannot be a duplicate. Try again.", "\x1b");
+            return false;
+          } else {
+            return true;
           }
         }
       }
