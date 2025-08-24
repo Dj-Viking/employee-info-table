@@ -5,11 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "console.table": "^0.10.0",
-    "inquirer": "^7.3.3",
-    "mysql2": "^2.1.0"
+    "inquirer": "^12.9.3",
+    "mysql2": "^3.14.3"
   },
   "devDependencies": {
-    "jest": "^26.4.0"
+    "jest": "^30.0.5"
   },
   "scripts": {
     "test": "jest --verbose",
